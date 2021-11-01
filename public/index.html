@@ -39,7 +39,11 @@
     
             const scene = new BABYLON.Scene(engine);  
 
-            //BABYLON.SceneLoader.ImportMeshAsync("", "https://assets.babylonjs.com/meshes/", "dude.babylon");
+            //var box = BABYLON.SceneLoader.ImportMeshAsync("box", "https://assets.babylonjs.com/meshes/", "box.babylon");
+            const box = BABYLON.MeshBuilder.CreateBox("box", {})
+            box.position.y = 0.5;
+            const ground = BABYLON.MeshBuilder.CreateGround("ground", {width:10, height:10});
+            
 
       //       BABYLON.SceneLoader.ImportMesh("", "https://models.babylonjs.com/", "shark.glb", scene, function (meshes) {          
       //   	scene.createDefaultCameraOrLight(true, true, true);
@@ -47,14 +51,13 @@
         
     		// });
 
-    		BABYLON.SceneLoader.ImportMesh("", "https://models.babylonjs.com/", "PBR_Spheres.glb", scene, function (meshes) {          
-        	scene.createDefaultCameraOrLight(true, true, true);
-        	scene.createDefaultEnvironment();        
-    		});
+    		// BABYLON.SceneLoader.ImportMesh("", "https://models.babylonjs.com/", "box.babylon", scene, function (meshes) {          
+      //   	scene.createDefaultCameraOrLight(true, true, true);
+      //   	scene.createDefaultEnvironment();        
+    		// });
 
     		
-
-    		// BABYLON.SceneLoader.ImportMesh("", "https://models.babylonjs.com/", "toast_acrobatics.glb", scene, function (meshes) {          
+			// BABYLON.SceneLoader.ImportMesh("", "https://models.babylonjs.com/", "toast_acrobatics.glb", scene, function (meshes) {          
       //   	scene.createDefaultCameraOrLight(true, true, true);
       //   	scene.createDefaultEnvironment();
         
