@@ -48,6 +48,8 @@
 			faceUV[3] = new BABYLON.Vector4(0.75, 0, 1.0, 1.0); //left side
             const box = BABYLON.MeshBuilder.CreateBox("box", {faceUV: faceUV, wrap: true});
             box.position.y = .5;
+            box.position.z = 4;
+           	box.rotation.y = Math.PI;
             //box.position.y = 4.2;
 			//box.position.z = 0.1;
 			//box.rotation.y = Math.PI / 4;
@@ -60,6 +62,8 @@
 			roof.scaling.x = 0.75;
 			roof.rotation.z = Math.PI / 2;
 			roof.position.y = 1.22;
+			roof.position.z = 4;
+			roof.rotation.y = Math.PI;
 
 			const groundMat = new BABYLON.StandardMaterial("groundMat");
 			groundMat.diffuseColor = new BABYLON.Color3(0, 1, 0);
@@ -82,11 +86,56 @@
 			//cloning a mesh after I merged it - clone is independent of og object, instance is linked to the original object
 			clonedHouse = house.clone("clonedHouse");
 			clonedHouse.position.x = 3;
+			//clonedHouse.rotation.y = Math.PI;
 
 			instanceHouse = house.createInstance("instanceHouse")
 			instanceHouse.position.x = -3;
+			//instanceHouse.rotation.y = Math.PI;
 
-			
+			//double wide home creation
+				//create a house twice as wide
+			faceUV2 = [];
+			faceUV2[0] = new BABYLON.Vector4(0.6, 0.0, 1.0, 1.0); //rear face
+    		faceUV2[1] = new BABYLON.Vector4(0.0, 0.0, 0.4, 1.0); //front face
+    		faceUV2[2] = new BABYLON.Vector4(0.4, 0, 0.6, 1.0); //right side
+    		faceUV2[3] = new BABYLON.Vector4(0.4, 0, 0.6, 1.0); //left side
+
+			const roofLong = BABYLON.MeshBuilder.CreateCylinder("roofLomg", {diameter: 2.5, height: 1.1, tessellation: 3});
+			const boxLong = BABYLON.MeshBuilder.CreateBox("boxLong", {faceUV: faceUV2, wrap: true});
+			boxLong.scaling.x = 2;
+
+			boxLong.position.x = 0;
+			boxLong.position.y =.5;
+			boxLong.position.z = 2;
+			boxLong.rotation.y = Math.PI/2;
+			roofLong.rotation.z = Math.PI/2;
+			roofLong.position.x = 0;
+			roofLong.position.y = 1.5;
+			roofLong.position.z = 2;
+
+			const boxMatLong = new BABYLON.StandardMaterial("boxmatlong");
+			boxMatLong.diffuseTexture = new BABYLON.Texture("https://doc.babylonjs.com/_next/image?url=%2Fimg%2Fgetstarted%2Fsemihouse.png&w=2048&q=75");
+			boxLong.material = boxMatLong;
+
+			// https://doc.babylonjs.com/_next/image?url=%2Fimg%2Fgetstarted%2Fsemihouse.png&w=2048&q=75
+
+			const roofMatLong = new BABYLON.StandardMaterial("roofMatLong");
+			roofMatLong.diffuseColor = new BABYLON.Color3.Magenta();
+
+			//now for some texture!
+			roofMatLong.diffuseTexture = new BABYLON.Texture("https://assets.babylonjs.com/environments/roof.jpg", scene);
+			roofLong.material = roofMatLong;
+
+			boxLong.position.z = -2;
+			roofLong.position.z = -2;
+			boxLong.position.x = -3.5;
+			roofLong.position.x = -3.5;
+
+
+
+			//const buildHouse = function (int size, Vector3 location) {
+
+			//}
 
 
 
