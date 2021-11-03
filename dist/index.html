@@ -1,10 +1,127 @@
 <!DOCTYPE html>
-<html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
     <head>
-        <meta charset="UTF-8">
-        <title>Title of Your Project</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+        <title>Babylon Template</title>
+
+        <style>
+            html, body {
+                overflow: hidden;
+                width: 100%;
+                height: 100%;
+                margin: 0;
+                padding: 0;
+            }
+
+            #renderCanvas {
+                width: 100%;
+                height: 100%;
+                touch-action: none;
+            }
+        </style>
+
+        <script src="https://cdn.babylonjs.com/babylon.js"></script>
+        <script src="https://cdn.babylonjs.com/loaders/babylonjs.loaders.min.js"></script>
+        <script src="https://code.jquery.com/pep/0.4.3/pep.js"></script>
     <script defer src="js/bundleName.js"></script></head>
-    <body>
-    	
-    </body>
+
+   <body>
+
+    <canvas id="renderCanvas" touch-action="none"></canvas> <!-- touch-action="none" for best results from PEP -->
+
+    <script>
+        const canvas = document.getElementById("renderCanvas"); // Get the canvas element
+        const engine = new BABYLON.Engine(canvas, true,{}); // Generate the BABYLON 3D engine
+
+        // Add your code here matching the playground format
+        const createScene = function () {
+    
+            const scene = new BABYLON.Scene(engine);  
+
+            //var box = BABYLON.SceneLoader.ImportMeshAsync("box", "https://assets.babylonjs.com/meshes/", "box.babylon"); //another way of making a box
+            //const box = BABYLON.MeshBuilder.CreateBox("box", {})
+            const box = BABYLON.MeshBuilder.CreateBox("box", {faceUV: faceUV, wrap: true});
+            box.position.y = .5;
+            //box.position.y = 4.2;
+			//box.position.z = 0.1;
+			//box.rotation.y = Math.PI / 4;
+			//box.rotation.y = BABYLON.Tools.ToRadians(45); //another way of doing the same thing the line above does
+            //box.scaling = new BABYLON.Vector3(5, 1.5, 3);
+            const ground = BABYLON.MeshBuilder.CreateGround("ground", {width:10, height:10});
+            var music = new BABYLON.Sound("Violons", "https://www.babylonjs-playground.com/sounds/violons11.wav", scene, null, { loop: true, autoplay: true });
+
+            const roof = BABYLON.MeshBuilder.CreateCylinder("roof", {diameter: 1.3, height: 1.2, tessellation: 12});
+			roof.scaling.x = 0.75;
+			roof.rotation.z = Math.PI / 2;
+			roof.position.y = 1.22;
+
+			const groundMat = new BABYLON.StandardMaterial("groundMat");
+			groundMat.diffuseColor = new BABYLON.Color3(0, 1, 0);
+			ground.material = groundMat; //Place the material property of the ground
+
+			const roofMat = new BABYLON.StandardMaterial("roofmat");
+			roofMat.diffuseColor = new BABYLON.Color3.Magenta();
+
+			//now for some texture!
+			roofMat.diffuseTexture = new BABYLON.Texture("https://assets.babylonjs.com/environments/roof.jpg", scene);
+			const boxMat = new BABYLON.StandardMaterial("boxMat");
+			boxMat.diffuseTexture = new BABYLON.Texture("https://www.babylonjs-playground.com/textures/floor.png");
+
+			roof.material = roofMat;
+			box.material = boxMat;
+
+			faceUV = [];
+			faceUV[0] = new BABYLON.Vector4(0.5, 0.0, 0.75, 1.0); //rear face
+			faceUV[1] = new BABYLON.Vector4(0.0, 0.0, 0.25, 1.0); //front face
+			faceUV[2] = new BABYLON.Vector4(0.25, 0, 0.5, 1.0); //right side
+			faceUV[3] = new BABYLON.Vector4(0.75, 0, 1.0, 1.0); //left side
+
+
+            
+
+
+
+            //Fun assets
+
+      //       BABYLON.SceneLoader.ImportMesh("", "https://models.babylonjs.com/", "shark.glb", scene, function (meshes) {          
+      //   	scene.createDefaultCameraOrLight(true, true, true);
+      //   	scene.createDefaultEnvironment();
+        
+    		// });
+
+    		// BABYLON.SceneLoader.ImportMesh("", "https://models.babylonjs.com/", "box.babylon", scene, function (meshes) {          
+      //   	scene.createDefaultCameraOrLight(true, true, true);
+      //   	scene.createDefaultEnvironment();        
+    		// });
+
+    		
+			// BABYLON.SceneLoader.ImportMesh("", "https://models.babylonjs.com/", "toast_acrobatics.glb", scene, function (meshes) {          
+      //   	scene.createDefaultCameraOrLight(true, true, true);
+      //   	scene.createDefaultEnvironment();
+        
+    		// });
+
+            const camera = new BABYLON.ArcRotateCamera("camera", -Math.PI / 2, Math.PI / 2.5, 15, new BABYLON.Vector3(0, 0, 0));
+            camera.attachControl(canvas, true);
+            const light = new BABYLON.HemisphericLight("light", new BABYLON.Vector3(1, 1, 0));
+
+            return scene;
+        };
+
+        const scene = createScene(); //Call the createScene function
+
+        // Register a render loop to repeatedly render the scene
+        engine.runRenderLoop(function () {
+                scene.render();
+        });
+
+        // Watch for browser/canvas resize events
+        window.addEventListener("resize", function () {
+                engine.resize();
+        });
+    </script>
+
+   </body>
+
 </html>
