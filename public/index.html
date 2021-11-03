@@ -3,6 +3,7 @@
 
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+
         <title>Babylon Template</title>
 
         <style>
@@ -24,11 +25,13 @@
         <script src="https://cdn.babylonjs.com/babylon.js"></script>
         <script src="https://cdn.babylonjs.com/loaders/babylonjs.loaders.min.js"></script>
         <script src="https://code.jquery.com/pep/0.4.3/pep.js"></script>
+
     </head>
 
    <body>
 
     <canvas id="renderCanvas" touch-action="none"></canvas> <!-- touch-action="none" for best results from PEP -->
+    
 
     <script>
         const canvas = document.getElementById("renderCanvas"); // Get the canvas element
@@ -38,15 +41,14 @@
         const createScene = function () {
     
             const scene = new BABYLON.Scene(engine);  
-            const ground = buildGround();
-            // const box = buildBox(1);
-            // const boxLong = buildBox(2);
-            // const roof = buildRoof(1);
-            // const roofLong = buildRoof(2);
-            const house = buildHouse(2);
                  
-            var music = new BABYLON.Sound("Violons", "https://www.babylonjs-playground.com/sounds/violons11.wav", scene, null, { loop: true, autoplay: true });          
-		
+            var music = new BABYLON.Sound("Violons", "https://www.babylonjs-playground.com/sounds/violons11.wav", scene, null, { loop: true, autoplay: true }); 
+
+            const neighborhood = buildNeighborhood();
+
+            //BABYLON.SceneLoader.ImportMeshAsync("", "https://assets.babylonjs.com/meshes/", "village.glb");
+ 
+  
 
             const camera = new BABYLON.ArcRotateCamera("camera", -Math.PI / 2, Math.PI / 2.5, 15, new BABYLON.Vector3(0, 0, 0));
             camera.attachControl(canvas, true);
@@ -136,9 +138,52 @@
 
 		}
 
+		const buildNeighborhood = () => {
+			//each address is [house type, rotation, x, z]
+			const ground = buildGround();
+            const addresses = [];
+            addresses.push([1, 0, 3,4]);
+            addresses.push([1, Math.PI/2, -2, 4]);
+            addresses.push([2, Math.PI/2, .5, 4]);
+            addresses.push([2, Math.PI, 4,2]);
+
+            addresses.push([1, 0, 3,4]);
+            addresses.push([1, -Math.PI/2, 2, -4]);
+            addresses.push([2, -Math.PI/2, -.5, -4]);
+            addresses.push([2, -Math.PI/4, -3.2,-3.2]);
+
+            //first create two houses we can make instances of
+            const littleHouse = buildHouse(1);
+            littleHouse.position.x = -3.8;
+            littleHouse.position.z = -.1;
+            littleHouse.rotation.y = Math.PI/2;
+
+            const bigHouse = buildHouse(2);
+            bigHouse.rotation.y = Math.PI;
+            bigHouse.position.x = -4;
+            bigHouse.position.z = 3;
+            //Lets make a bunch of houses
+            const houses = [];
+            for(let i =0; i<addresses.length;i++){
+            	if(addresses[i][0] == 2){
+            		houses[i] = bigHouse.createInstance("house" + i);
+            	}
+            	else{
+            		houses[i] = littleHouse.createInstance("house" + i);
+            	}
+            	houses[i].rotation.y = addresses[i][1];
+       			houses[i].position.x = addresses[i][2];
+       			houses[i].position.z = addresses[i][3];
+
+            }
+            return houses;
+
+		}
+
         
 
         const scene = createScene(); //Call the createScene function
+
 
         // Register a render loop to repeatedly render the scene
         engine.runRenderLoop(function () {
@@ -169,7 +214,9 @@
       //   	scene.createDefaultEnvironment();
         
     		// });
+
     </script>
+
 
    </body>
 
