@@ -38,108 +38,119 @@
         const createScene = function () {
     
             const scene = new BABYLON.Scene(engine);  
+            const ground = buildGround();
+            // const box = buildBox(1);
+            // const boxLong = buildBox(2);
+            // const roof = buildRoof(1);
+            // const roofLong = buildRoof(2);
+            const house = buildHouse(2);
+                 
+            var music = new BABYLON.Sound("Violons", "https://www.babylonjs-playground.com/sounds/violons11.wav", scene, null, { loop: true, autoplay: true });          
+		
 
-            //var box = BABYLON.SceneLoader.ImportMeshAsync("box", "https://assets.babylonjs.com/meshes/", "box.babylon"); //another way of making a box
-            //const box = BABYLON.MeshBuilder.CreateBox("box", {})
-            faceUV = [];
-			faceUV[0] = new BABYLON.Vector4(0.5, 0.0, 0.75, 1.0); //rear face
-			faceUV[1] = new BABYLON.Vector4(0.0, 0.0, 0.25, 1.0); //front face
-			faceUV[2] = new BABYLON.Vector4(0.25, 0, 0.5, 1.0); //right side
-			faceUV[3] = new BABYLON.Vector4(0.75, 0, 1.0, 1.0); //left side
-            const box = BABYLON.MeshBuilder.CreateBox("box", {faceUV: faceUV, wrap: true});
-            box.position.y = .5;
-            box.position.z = 4;
-           	box.rotation.y = Math.PI;
-            //box.position.y = 4.2;
-			//box.position.z = 0.1;
-			//box.rotation.y = Math.PI / 4;
-			//box.rotation.y = BABYLON.Tools.ToRadians(45); //another way of doing the same thing the line above does
-            //box.scaling = new BABYLON.Vector3(5, 1.5, 3);
-            const ground = BABYLON.MeshBuilder.CreateGround("ground", {width:10, height:10});
-            var music = new BABYLON.Sound("Violons", "https://www.babylonjs-playground.com/sounds/violons11.wav", scene, null, { loop: true, autoplay: true });
+            const camera = new BABYLON.ArcRotateCamera("camera", -Math.PI / 2, Math.PI / 2.5, 15, new BABYLON.Vector3(0, 0, 0));
+            camera.attachControl(canvas, true);
+            const light = new BABYLON.HemisphericLight("light", new BABYLON.Vector3(1, 1, 0));
 
-            const roof = BABYLON.MeshBuilder.CreateCylinder("roof", {diameter: 1.3, height: 1.2, tessellation: 12});
-			roof.scaling.x = 0.75;
-			roof.rotation.z = Math.PI / 2;
-			roof.position.y = 1.22;
-			roof.position.z = 4;
-			roof.rotation.y = Math.PI;
+            return scene;
+        };
 
-			const groundMat = new BABYLON.StandardMaterial("groundMat");
+        const buildGround = function() {
+        	const ground = BABYLON.MeshBuilder.CreateGround("ground", {width:10, height:10});
+        	const groundMat = new BABYLON.StandardMaterial("groundMat");
 			groundMat.diffuseColor = new BABYLON.Color3(0, 1, 0);
 			ground.material = groundMat; //Place the material property of the ground
 
-			const roofMat = new BABYLON.StandardMaterial("roofmat");
-			roofMat.diffuseColor = new BABYLON.Color3.Magenta();
+        }
 
-			//now for some texture!
-			roofMat.diffuseTexture = new BABYLON.Texture("https://assets.babylonjs.com/environments/roof.jpg", scene);
-			const boxMat = new BABYLON.StandardMaterial("boxMat");
-			boxMat.diffuseTexture = new BABYLON.Texture("https://doc.babylonjs.com/_next/image?url=%2Fimg%2Fgetstarted%2Fcubehouse.png&w=2048&q=75");
+		const buildBox = (width) => {
+			if(width == 2){
+				faceUV2 = [];
+				faceUV2[0] = new BABYLON.Vector4(0.6, 0.0, 1.0, 1.0); //rear face
+	    		faceUV2[1] = new BABYLON.Vector4(0.0, 0.0, 0.4, 1.0); //front face
+	    		faceUV2[2] = new BABYLON.Vector4(0.4, 0, 0.6, 1.0); //right side
+	    		faceUV2[3] = new BABYLON.Vector4(0.4, 0, 0.6, 1.0); //left side
 
-			roof.material = roofMat;
-			box.material = boxMat;
+				
+				const boxLong = BABYLON.MeshBuilder.CreateBox("boxLong", {faceUV: faceUV2, wrap: true});
+				boxLong.scaling.x = 2;
+				boxLong.position.y = .5;
+				boxLong.rotation.y = Math.PI/2;
 
-			//const house = BABYLON.Mesh.MergeMeshes([box, roof]); //the different paremeters do something where they allow the originals to keep their respective textures
+				const boxMatLong = new BABYLON.StandardMaterial("boxmatlong");
+				boxMatLong.diffuseTexture = new BABYLON.Texture("https://doc.babylonjs.com/_next/image?url=%2Fimg%2Fgetstarted%2Fsemihouse.png&w=2048&q=75");
+				boxLong.material = boxMatLong;
+				return boxLong;
+
+			}
+			else{
+			
+				faceUV = [];
+				faceUV[0] = new BABYLON.Vector4(0.5, 0.0, 0.75, 1.0); //rear face
+				faceUV[1] = new BABYLON.Vector4(0.0, 0.0, 0.25, 1.0); //front face
+				faceUV[2] = new BABYLON.Vector4(0.25, 0, 0.5, 1.0); //right side
+				faceUV[3] = new BABYLON.Vector4(0.75, 0, 1.0, 1.0); //left side
+	            const box = BABYLON.MeshBuilder.CreateBox("box", {faceUV: faceUV, wrap: true});
+	            box.position.y = .5;
+	           	box.rotation.y = Math.PI;
+	           	const boxMat = new BABYLON.StandardMaterial("boxMat");
+				boxMat.diffuseTexture = new BABYLON.Texture("https://doc.babylonjs.com/_next/image?url=%2Fimg%2Fgetstarted%2Fcubehouse.png&w=2048&q=75");
+				box.material = boxMat;
+	           	return box;
+           }
+
+           return;
+		}
+
+		const buildRoof = (width) => {
+			if(width == 2){
+				const roofLong = BABYLON.MeshBuilder.CreateCylinder("roofLomg", {diameter: 2.5, height: 1.1, tessellation: 3});
+				const roofMatLong = new BABYLON.StandardMaterial("roofMatLong");
+				roofMatLong.diffuseColor = new BABYLON.Color3.Magenta();
+				roofMatLong.diffuseTexture = new BABYLON.Texture("https://assets.babylonjs.com/environments/roof.jpg");
+				roofLong.material = roofMatLong;
+				roofLong.rotation.z = Math.PI / 2;
+				roofLong.position.y = 1.6;
+				return roofLong;
+
+			}
+			else{
+				const roofMat = new BABYLON.StandardMaterial("roofmat");
+				roofMat.diffuseColor = new BABYLON.Color3.Magenta();
+				roofMat.diffuseTexture = new BABYLON.Texture("https://assets.babylonjs.com/environments/roof.jpg");
+				const roof = BABYLON.MeshBuilder.CreateCylinder("roof", {diameter: 1.3, height: 1.2, tessellation: 12});
+				roof.material = roofMat;
+				roof.rotation.z = Math.PI / 2;
+				roof.position.y = 1.4;
+  				return roof;
+
+			}
+
+		}
+
+		const buildHouse = (width) => {
+			const box = buildBox(width);
+			const roof = buildRoof(width);
 			const house = BABYLON.Mesh.MergeMeshes([box, roof], true, false, null, false, true);
+			return house;
 
-			//cloning a mesh after I merged it - clone is independent of og object, instance is linked to the original object
-			clonedHouse = house.clone("clonedHouse");
-			clonedHouse.position.x = 3;
-			//clonedHouse.rotation.y = Math.PI;
+		}
 
-			instanceHouse = house.createInstance("instanceHouse")
-			instanceHouse.position.x = -3;
-			//instanceHouse.rotation.y = Math.PI;
+        
 
-			//double wide home creation
-				//create a house twice as wide
-			faceUV2 = [];
-			faceUV2[0] = new BABYLON.Vector4(0.6, 0.0, 1.0, 1.0); //rear face
-    		faceUV2[1] = new BABYLON.Vector4(0.0, 0.0, 0.4, 1.0); //front face
-    		faceUV2[2] = new BABYLON.Vector4(0.4, 0, 0.6, 1.0); //right side
-    		faceUV2[3] = new BABYLON.Vector4(0.4, 0, 0.6, 1.0); //left side
+        const scene = createScene(); //Call the createScene function
 
-			const roofLong = BABYLON.MeshBuilder.CreateCylinder("roofLomg", {diameter: 2.5, height: 1.1, tessellation: 3});
-			const boxLong = BABYLON.MeshBuilder.CreateBox("boxLong", {faceUV: faceUV2, wrap: true});
-			boxLong.scaling.x = 2;
+        // Register a render loop to repeatedly render the scene
+        engine.runRenderLoop(function () {
+                scene.render();
+        });
 
-			boxLong.position.x = 0;
-			boxLong.position.y =.5;
-			boxLong.position.z = 2;
-			boxLong.rotation.y = Math.PI/2;
-			roofLong.rotation.z = Math.PI/2;
-			roofLong.position.x = 0;
-			roofLong.position.y = 1.5;
-			roofLong.position.z = 2;
+        // Watch for browser/canvas resize events
+        window.addEventListener("resize", function () {
+                engine.resize();
+        });
 
-			const boxMatLong = new BABYLON.StandardMaterial("boxmatlong");
-			boxMatLong.diffuseTexture = new BABYLON.Texture("https://doc.babylonjs.com/_next/image?url=%2Fimg%2Fgetstarted%2Fsemihouse.png&w=2048&q=75");
-			boxLong.material = boxMatLong;
-
-			// https://doc.babylonjs.com/_next/image?url=%2Fimg%2Fgetstarted%2Fsemihouse.png&w=2048&q=75
-
-			const roofMatLong = new BABYLON.StandardMaterial("roofMatLong");
-			roofMatLong.diffuseColor = new BABYLON.Color3.Magenta();
-
-			//now for some texture!
-			roofMatLong.diffuseTexture = new BABYLON.Texture("https://assets.babylonjs.com/environments/roof.jpg", scene);
-			roofLong.material = roofMatLong;
-
-			boxLong.position.z = -2;
-			roofLong.position.z = -2;
-			boxLong.position.x = -3.5;
-			roofLong.position.x = -3.5;
-
-
-
-			//const buildHouse = function (int size, Vector3 location) {
-
-			//}
-
-
-
-            //Fun assets
+             //Fun assets
 
       //       BABYLON.SceneLoader.ImportMesh("", "https://models.babylonjs.com/", "shark.glb", scene, function (meshes) {          
       //   	scene.createDefaultCameraOrLight(true, true, true);
@@ -158,27 +169,9 @@
       //   	scene.createDefaultEnvironment();
         
     		// });
-
-            const camera = new BABYLON.ArcRotateCamera("camera", -Math.PI / 2, Math.PI / 2.5, 15, new BABYLON.Vector3(0, 0, 0));
-            camera.attachControl(canvas, true);
-            const light = new BABYLON.HemisphericLight("light", new BABYLON.Vector3(1, 1, 0));
-
-            return scene;
-        };
-
-        const scene = createScene(); //Call the createScene function
-
-        // Register a render loop to repeatedly render the scene
-        engine.runRenderLoop(function () {
-                scene.render();
-        });
-
-        // Watch for browser/canvas resize events
-        window.addEventListener("resize", function () {
-                engine.resize();
-        });
     </script>
 
    </body>
 
 </html>
+
